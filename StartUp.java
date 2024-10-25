@@ -42,7 +42,7 @@ public class StartUp{
 
         int read;
         while((read = inputStream.read(buff, 0, Math.min(inputStream.available(), 2048))) > 0){
-            outputStream.write(buff, 0, read); 
+            outputStream.write(buff, 0, read); //this copies the data from the input file to the output file 
              
         }
     }
