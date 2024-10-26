@@ -20,7 +20,7 @@ public class StartUp{
                 try{
                     final ByteArrayOutputStream request = new ByteArrayOutputStream(); //read and write from the streams, do it in the thread class, so you can read multiple clients
                     transfer(inputStream, request);
-
+ 
                     final HttpRequest httpRequest = parseMetadata(new ByteArrayInputStream(request.toByteArray())); 
                 }
                 catch(IOException e){
@@ -49,7 +49,25 @@ public class StartUp{
 
 
     public static HttpRequest parseMetadata(InputStream data){
-        
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(data));
+        final String firstLine = bufferedReader.readLine();
+        final String method = firstLine.split("\\s+")[0];
+        final String url = firstLine.split("\\s+")[1];
+
+        final Map<String, String> headers = new HashMap<>();
+        String headerLine;
+        while((headerLine = bufferedReader.readLine()) != null){
+            if (headerLine.trim().isEmpty()){
+                break;
+            }
+
+            String key = headerLine.split(":\\s")[0];
+            String value = headerLine.split(":\\s")[1];
+
+            headers.put(key, value);
+        }   
+
+        return new HttpRequest(method, url, headers);
     }
 
     static class HttpRequest{
