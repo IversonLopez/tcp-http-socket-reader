@@ -2,8 +2,9 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Map;
+import java.util.HashMap;
 import java.lang.Math;
+import java.util.Map;
 
 public class StartUp{
     public static void main(String[] args) throws Exception{ //throws exception after main method
@@ -20,8 +21,17 @@ public class StartUp{
                 try{
                     final ByteArrayOutputStream request = new ByteArrayOutputStream(); //read and write from the streams, do it in the thread class, so you can read multiple clients
                     transfer(inputStream, request);
-
+ 
                     final HttpRequest httpRequest = parseMetadata(new ByteArrayInputStream(request.toByteArray())); 
+
+                   switch(httpRequest.getMethod()){
+                        case "GET":
+                            handleGetRequest(httpRequest, outputStream);
+
+                        case "POST":
+                        //TODO: implement 
+                            break;
+                   }
                 }
                 catch(IOException e){
                     e.printStackTrace();
@@ -42,37 +52,71 @@ public class StartUp{
 
         int read;
         while((read = inputStream.read(buff, 0, Math.min(inputStream.available(), 2048))) > 0){
-            outputStream.write(buff, 0, read); 
+            outputStream.write(buff, 0, read); //this copies the data from the input file to the output file 
              
         }
     }
 
 
+<<<<<<< HEAD
     
+=======
+    public static HttpRequest parseMetadata(InputStream data) throws IOException{
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(data));
+        final String firstLine = bufferedReader.readLine();
+        final String method = firstLine.split("\\s+")[0];
+        final String url = firstLine.split("\\s+")[1];
 
-    static class HttpRequest{
-        private final String method;
-        private final String url;
-        private final Map<String, String> headers;
+        final Map<String, String> headers = new HashMap<>();
+        String headerLine;
+        while((headerLine = bufferedReader.readLine()) != null){
+            if (headerLine.trim().isEmpty()){
+                break;
+            }
 
-        HttpRequest(String method, String url, Map<String, String> headers){
-            this.method = method;
-            this.url = url;
-            this.headers = headers;
-        }
+            String key = headerLine.split(":\\s")[0];
+            String value = headerLine.split(":\\s")[1];
 
-        public String getMethod(){
-            return method;
-        }
+            headers.put(key, value);
+        }   
 
-        public String getURl(){
-            return url;
-        }
-
-        public Map<String, String> getHeader(){
-            return headers;
-        }
+        return new HttpRequest(method, url, headers);
     }
+>>>>>>> 041d7a1607338b20341f3498c8b720c497140036
+
+
+public static void handleGetRequest(HttpRequest request, OutputStream outputstream) throws IOException{
+        String filename = request.getUrl();
 }
 
 
+static class HttpRequest{
+    private final String method;
+    private final String url;
+    private final Map<String, String> headers;
+
+    HttpRequest(String method, String url, Map<String, String> headers){
+        this.method = method;
+        this.url = url;
+        this.headers = headers;
+    }
+<<<<<<< HEAD
+}
+
+
+=======
+
+    public String getMethod(){
+        return method;
+    }
+
+    public String getURl(){
+        return url;
+    }
+
+    public Map<String, String> getHeader(){
+        return headers;
+    }
+}
+}
+>>>>>>> 041d7a1607338b20341f3498c8b720c497140036
