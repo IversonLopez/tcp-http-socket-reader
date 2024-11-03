@@ -48,9 +48,7 @@ public class StartUp{
     }
 
 
-    public static HttpRequest parseMetadata(InputStream data){
-        
-    }
+    
 
     static class HttpRequest{
         private final String method;
@@ -76,3 +74,5 @@ public class StartUp{
         }
     }
 }
+
+
