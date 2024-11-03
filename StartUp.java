@@ -2,8 +2,9 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Map;
+import java.util.HashMap;
 import java.lang.Math;
+import java.util.Map;
 
 public class StartUp{
     public static void main(String[] args) throws Exception{ //throws exception after main method
@@ -22,6 +23,15 @@ public class StartUp{
                     transfer(inputStream, request);
  
                     final HttpRequest httpRequest = parseMetadata(new ByteArrayInputStream(request.toByteArray())); 
+
+                   switch(httpRequest.getMethod()){
+                        case "GET":
+                            handleGetRequest(httpRequest, outputStream);
+
+                        case "POST":
+                        //TODO: implement 
+                            break;
+                   }
                 }
                 catch(IOException e){
                     e.printStackTrace();
@@ -48,7 +58,7 @@ public class StartUp{
     }
 
 
-    public static HttpRequest parseMetadata(InputStream data){
+    public static HttpRequest parseMetadata(InputStream data) throws IOException{
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(data));
         final String firstLine = bufferedReader.readLine();
         final String method = firstLine.split("\\s+")[0];
@@ -70,27 +80,33 @@ public class StartUp{
         return new HttpRequest(method, url, headers);
     }
 
-    static class HttpRequest{
-        private final String method;
-        private final String url;
-        private final Map<String, String> headers;
 
-        HttpRequest(String method, String url, Map<String, String> headers){
-            this.method = method;
-            this.url = url;
-            this.headers = headers;
-        }
+public static void handleGetRequest(HttpRequest request, OutputStream outputstream) throws IOException{
+        String filename = request.getUrl();
+}
 
-        public String getMethod(){
-            return method;
-        }
 
-        public String getURl(){
-            return url;
-        }
+static class HttpRequest{
+    private final String method;
+    private final String url;
+    private final Map<String, String> headers;
 
-        public Map<String, String> getHeader(){
-            return headers;
-        }
+    HttpRequest(String method, String url, Map<String, String> headers){
+        this.method = method;
+        this.url = url;
+        this.headers = headers;
     }
+
+    public String getMethod(){
+        return method;
+    }
+
+    public String getURl(){
+        return url;
+    }
+
+    public Map<String, String> getHeader(){
+        return headers;
+    }
+}
 }
