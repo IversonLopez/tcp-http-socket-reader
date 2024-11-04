@@ -58,9 +58,6 @@ public class StartUp{
     }
 
 
-<<<<<<< HEAD
-    
-=======
     public static HttpRequest parseMetadata(InputStream data) throws IOException{
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(data));
         final String firstLine = bufferedReader.readLine();
@@ -82,7 +79,6 @@ public class StartUp{
 
         return new HttpRequest(method, url, headers);
     }
->>>>>>> 041d7a1607338b20341f3498c8b720c497140036
 
 
 public static void handleGetRequest(HttpRequest request, OutputStream outputstream) throws IOException{
@@ -100,11 +96,6 @@ static class HttpRequest{
         this.url = url;
         this.headers = headers;
     }
-<<<<<<< HEAD
-}
-
-
-=======
 
     public String getMethod(){
         return method;
@@ -119,4 +110,3 @@ static class HttpRequest{
     }
 }
 }
->>>>>>> 041d7a1607338b20341f3498c8b720c497140036
