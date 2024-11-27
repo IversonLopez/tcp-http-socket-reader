@@ -1,12 +1,15 @@
+package main;
 //Server Creation, listens for connections coming from the browser
 
 import java.io.*;
 import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.lang.Math;
 import java.util.Map;
+import main.utils.FileUtils;
 
 public class StartUp{
     public static void main(String[] args) throws Exception{ //throws exception after main method
@@ -29,6 +32,7 @@ public class StartUp{
                    switch(httpRequest.getMethod()){
                         case "GET":
                             handleGetRequest(httpRequest, outputStream);
+                            break;
 
                         case "POST":
                         //TODO: implement 
@@ -83,10 +87,49 @@ public class StartUp{
     }
 
 
+<<<<<<< HEAD:StartUp.java
 public static void handleGetRequest(HttpRequest request, OutputStream outputstream) throws IOException{
         String filename   request.getUrl();
 
 } 
+=======
+public static void handleGetRequest(HttpRequest request, OutputStream outputStream) throws IOException{
+        String fileName = request.geturl();
+        if (FileUtils.exist("webapp" + fileName)) {
+            fileName = "webapp" + fileName;
+        }
+        else if(FileUtils.exist("uploaded" + fileName)){
+            fileName = "uploaded"  + fileName;
+        }
+        else{
+            outputStream.write("HTTP/1.1 404 Not Found\r\n\r\n<h1>FileNot Found</h1>".getBytes(StandardCharsets.UTF_8));
+             return; //file doesn't exist because it is not found in any of the both folders
+        }
+
+
+        final StringBuilder responseMetadata = new StringBuilder();
+
+        responseMetadata.append("HTTP/1.1 200 OK\r\n");
+
+        responseMetadata.append(String.format("Content-Type: %s\r\n", FileUtils.probeContentType(fileName)));
+
+        final InputStream fileStream = FileUtils.getInputStream(fileName);
+        responseMetadata.append(String.format("Content-Length: %d\r\n", fileStream.available()));
+        responseMetadata.append("\r\n");
+
+        outputStream.write(responseMetadata.toString().getBytes(StandardCharsets.UTF_8));
+
+        
+        byte[] buffer = new byte[2048]; 
+        int bytesRead;
+        while ((bytesRead = fileStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        fileStream.close(); 
+        
+        
+}   
+>>>>>>> 12b0976783f1646efa162e10392bb74169a5711e:main/StartUp.java
 
 
 static class HttpRequest{
@@ -104,7 +147,11 @@ static class HttpRequest{
         return method;
     }
 
+<<<<<<< HEAD:StartUp.java
     public String getUrl(){
+=======
+    public String geturl(){
+>>>>>>> 12b0976783f1646efa162e10392bb74169a5711e:main/StartUp.java
         return url;
     }
 
